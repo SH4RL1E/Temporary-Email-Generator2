@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEMPORARY EMAIL GENERATOR | CHARLIEProjects</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <link rel="icon" href="https://i.imgur.com/QTUPnng.jpeg">
+    <style>
+        body {
+            color: #4B3D6B;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F7E4B8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: #E0C6A5;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .container img {
+            border-radius: 50%;
+            border: 3px solid #4B3D6B;
+            margin: 20px 0;
+        }
+
+        h1 {
+            color: #4B3D6B;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #5B4F75;
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            background-color: #FFF3D0;
+            border-radius: 12px;
+            border: 1px solid #4B3D6B;
+            color: #4B3D6B;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .btn {
+            width: 100%;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 15px;
+            padding: 10px;
+        }
+
+        .btn-success {
+            background-color: #FFD700;
+            color: #4B3D6B;
+        }
+
+        .btn-success:hover {
+            background-color: #FFC107;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-danger {
+            background-color: #C71585;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #D1006B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        hr {
+            border: 2px solid #4B3D6B;
+            margin: 20px 0;
+        }
+
+        .email-preview {
+            border: 1px solid #D0C6B1;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            background-color: #FFF3D0;
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            color: #4B3D6B;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #D0C6B1;
+        }
+
+        th {
+            background-color: #E0C6A5;
+            color: #4B3D6B;
+        }
+
+        .subject {
+            font-weight: bold;
+            color: #C71585;
+            cursor: pointer;
+        }
+
+        #status {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            text-align: center;
+            color: #4B3D6B;
+            background-color: #F7E4B8;
+            padding: 10px 0;
+        }
+
+        a {
+            color: #4B3D6B;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+
+        #datetime {
+            margin-top: 15px;
+            color: #5B4F75;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://i.imgur.com/WharWPG.jpeg" height="90px" width="90px" alt="TempMail Logo">
+        <h1><i class="fa-solid fa-envelope"></i> 𝐓𝐄𝐌𝐏𝐎𝐑𝐀𝐓𝐘 𝐄𝐌𝐀𝐈𝐋</h1>
+        <input type="text" id="addr" placeholder="Temporary email" class="form-control">
+        <button class="btn btn-success" onclick="refreshMail()"><i class="fas fa-sync"></i> CHECK BOX</button>
+        <button class="btn btn-danger" onclick="genEmail()"><i class="fas fa-redo"></i> GENERATE NEW EMAIL</button>
+        <div id="datetime">
+            <p id="time"></p>
+            <p id="ip-address"></p>
+        </div>
+        <hr>
+        <div id="email-list">
+            <h5>Recent Emails:</h5>
+            <table id="emails"></table>
+        </div>
+        <div class="email-preview" id="email-preview"></div>
+    </div>
+    <footer id="status">
+        © 2024 <a href="https://www.facebook.com/61550011623347"><span style="color: blue;">Charlie</span></a>. All rights reserved.
+    </footer>
+
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script>
+        function genEmail() {
+            $.getJSON("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1", (res) => {
+                $('#addr').val(res[0]);
+                refreshMail();
+            });
+        }
+
+        function refreshMail() {
+            const addr = $('#addr').val();
+            if (!addr) {
+                alert("Please generate or input an email address first!");
+                return;
+            }
+
+            const [user, domain] = addr.split('@');
+
+            $.getJSON(`https://www.1secmail.com/api/v1/?action=getMessages&login=${user}&domain=${domain}`, (emails) => {
+                $('#emails').empty();
+                $('#emails').append(`<tr><th>Inbox Code:</th></tr>`);
+                emails.forEach(email => {
+                    $('#emails').append(`<tr class='subject' onclick='loadEmail(${email.id})'><td>${email.subject}</td></tr>`);
+                });
+            });
+        }
+
+        function loadEmail(id) {
+            const addr = $('#addr').val();
+            if (!addr) {
+                alert("Please generate or input an email address first!");
+                return;
+            }
+
+            const [user, domain] = addr.split('@');
+
+            $.getJSON(`https://www.1secmail.com/api/v1/?action=readMessage&login=${user}&domain=${domain}&id=${id}`, (email) => {
+                const preview = $('#email-preview');
+                preview.html(`<h6>Subject: ${email.subject}</h6><p>${email.htmlBody || email.body}</p>`);
+                preview.show();
+                if (email.attachments) {
+                    const atts = $('<div></div>');
+                    email.attachments.forEach(file => {
+                        atts.append(`<a href='https://www.1secmail.com/api/v1/?action=download&login=${user}&domain=${domain}&id=${id}&file=${file.filename}'>${file.filename}</a><br>`);
+                    });
+                    preview.append(atts);
+                }
+            });
+        }
+
+        function updateTime() {
+            const options = { timeZone: 'Asia/Manila', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const now = new Date().toLocaleString('en-US', options);
+            document.getElementById('time').innerText = `⏰ Time: ${now}`;
+        }
+
+        function fetchIPAddress() {
+            $.getJSON('https://api.ipify.org?format=json', function(data) {
+                document.getElementById('ip-address').innerText = `🛡️ IP Address: ${data.ip}`;
+            });
+        }
+
+        $(function() {
+            genEmail();
+            fetchIPAddress();
+            setInterval(updateTime, 1000);
+        });
+    </script>
+</body>
+</html>
